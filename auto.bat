@@ -19,8 +19,9 @@ echo 第五个参数：选择哪个英雄作为主控英雄[1-3]：第%selHero%位
 
 set num=1
 
-:: set deviceName="emulator-5554"
-set deviceName="78fe5719"
+rem 选择需要使用的设备，需要手动输入adb devices进行查看
+set deviceName="emulator-5554"
+:: set deviceName="78fe5719"
 
 :start
 echo =======================================
@@ -29,33 +30,34 @@ echo 第%num%次：
 call :time totalStart
 
 echo 点击“再次挑战”
-adb -s %deviceName% shell input tap 967 658
+adb -s %deviceName% shell input tap 1451 987
 
 choice /t 3 /d y /n >nul
 
 echo 点击“闯关”
 
 rem 点击一下防沉迷提示
-adb -s %deviceName% shell input tap 830 512
+adb -s %deviceName% shell input tap 1245 768
 choice /t 1 /d y /n >nul
-adb -s %deviceName% shell input tap 990 610
+adb -s %deviceName% shell input tap 1485 915
 
+echo 等待读取游戏...
 choice /t %waitLoading% /d y /n >nul
 
-echo 取消废话
-if %skipStartDiag% == 0 goto skipend
-adb -s %deviceName% shell input tap 1251 64
-:skipend
+rem echo 取消废话..目前已经不需要
+rem if %skipStartDiag% == 0 goto skipend
+rem adb -s %deviceName% shell input tap 1877 96
+rem :skipend
 
 choice /t 1 /d y /n >nul
 
-echo 点击“自动”
-rem adb -s %deviceName% shell input tap 1193 45
+rem echo 点击“自动”
+rem adb -s %deviceName% shell input tap 1790 68
 
 rem 选择英雄
-if %selHero% == 1 adb -s %deviceName% shell input tap 60 80
-if %selHero% == 2 adb -s %deviceName% shell input tap 60 180
-if %selHero% == 3 adb -s %deviceName% shell input tap 60 280
+if %selHero% == 1 adb -s %deviceName% shell input tap 90 120
+if %selHero% == 2 adb -s %deviceName% shell input tap 90 270
+if %selHero% == 3 adb -s %deviceName% shell input tap 90 420
 
 set fhloop=0
 echo 开始自动取消废话阶段
@@ -65,11 +67,13 @@ echo 开始时间：%time%
 
 :loop
 choice /t 1 /d y /n >nul
-adb -s %deviceName% shell input tap 1251 64
+adb -s %deviceName% shell input tap 1877 96
 set /a fhloop+=1
 if %fhloop% == %waitTime% goto end
+echo|set /p=%fhloop%.
 goto loop
 :end
+echo 循环结束！
 
 call :time EndTime
 echo 结束时间：%time%
